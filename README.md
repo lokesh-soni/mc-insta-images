@@ -1,63 +1,58 @@
-## ==========================
-## =========== S3 ===========
-## ==========================
-
-## Create
+## S3 Setup
+### Create
 `aws --endpoint-url=http://localhost:4566 s3 mb s3://insta-images`
 
-## List Buckets
+### List Buckets
 `aws --endpoint-url=http://localhost:4566 s3 ls`
-## List Objects
+### List Objects
 `aws --endpoint-url=http://localhost:4566 s3 ls insta-images`
 
-## Create Lifecycle Policies
+### Create Lifecycle Policies
 `aws --endpoint-url=http://localhost:4566 s3api put-bucket-lifecycle-configuration --bucket insta-images --lifecycle-configuration file://.scripts/_includes/s3_lifecycle.json`
 
-## List Lifecycle Policies
+### List Lifecycle Policies
 `aws --endpoint-url=http://localhost:4566 s3api get-bucket-lifecycle-configuration --bucket insta-images`
 
-## ==========================
-## ======== DynamoDB ========
-## ==========================
+***
 
-## Create
+## DynamoDB Setup
+
+### Create
 
 `aws --endpoint-url=http://localhost:4566 dynamodb create-table --cli-input-json file://.scripts/_includes/images_table.json --deletion-protection-enabled`
 
-## List
+### List
 `aws --endpoint-url=http://localhost:4566 dynamodb describe-table --table-name Images`
 
-## View Objects
+### View Objects
 `aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name Images`
 
-## ==========================
-## ========= Lambda =========
-## ==========================
+*** 
 
+## Lambda Setup 
 
-## Create
+### Create
 `bash .scripts/deploy_lambda_dev.sh`
 
-## List 
+### List 
 `aws --endpoint-url=http://localhost:4566 lambda list-functions`
 
-## Delete
+### Delete
 `aws --profile localstack --endpoint-url http://localhost:4566 lambda list-functions --query "Functions[].FunctionName" --output text | xargs -n1 -r aws --profile localstack --endpoint-url http://localhost:4566 lambda delete-function --function-name`
 
-## ==========================
-## ======= apiGateway =======
-## ==========================
+*** 
+## API-Gateway Setup 
 
-## API-Id
+### API-Id
 `API_ID=$(aws --profile localstack --endpoint-url http://localhost:4566 apigateway get-rest-apis --query "items[?name=='InstaImageAPI'].id" --output text)`
 
-## Create
+### Create
 `bash .scripts/create_api_dev.sh`
 
-## List resources and their HTTP methods
+### List resources and their HTTP methods
 `aws --profile localstack --endpoint-url http://localhost:4566 apigateway get-resources --rest-api-id $API_ID --query "items[*].[path, resourceMethods]" --output json`
 
-## Delete 
+### Delete 
 `aws --profile localstack --endpoint-url http://localhost:4566 apigateway get-rest-apis --query "items[].id" --output text | xargs -n1 -r aws --profile localstack --endpoint-url http://localhost:4566 apigateway delete-rest-api --rest-api-id`
 
 ====
