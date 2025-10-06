@@ -1,0 +1,7 @@
+.idea/
+.localstack/
+.venv/
+.ruff_cache/
+.pytest_cache/
+dist/
+poetry.lock/

@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "f9f4db8a-fa98-4e89-ab4a-ed20b4ca61df",
+		"name": "Insta Image API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10690025"
+	},
+	"item": [
+		{
+			"name": "View Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/restapis/5jsozn2y0f/dev/_user_request_/images/897f9793-51f7-46a9-a807-c54b8b5b8bf6",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"restapis",
+						"5jsozn2y0f",
+						"dev",
+						"_user_request_",
+						"images",
+						"897f9793-51f7-46a9-a807-c54b8b5b8bf6"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:4566/restapis/5jsozn2y0f/dev/_user_request_/images/897f9793-51f7-46a9-a807-c54b8b5b8bf6' \\\n--data ''"
+			},
+			"response": []
+		},
+		{
+			"name": "List Images",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/restapis/5jsozn2y0f/dev/_user_request_/images/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"restapis",
+						"5jsozn2y0f",
+						"dev",
+						"_user_request_",
+						"images",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Image",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"loki\",\n    \"tags\": [\n        \"string\"\n    ],\n    \"filename\": \"string.jpg\",\n    \"image_data\": {\n        \"camera\": \"Nikon\",\n        \"location\": \"Paris\"\n    },\n    \"extra\": {\n        \"ip\": \"127.0.0.1\",\n        \"device\": \"mobile\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/restapis/5jsozn2y0f/dev/_user_request_/images",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"restapis",
+						"5jsozn2y0f",
+						"dev",
+						"_user_request_",
+						"images"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

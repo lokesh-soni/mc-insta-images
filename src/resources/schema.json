@@ -1,0 +1,14 @@
+{
+    "upload_image": {
+      "type": "object",
+      "required": ["image_id", "user_id", "s3_key"],
+      "properties": {
+        "image_id": { "type": "string" },
+        "user_id": { "type": "string" },
+        "s3_key": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "additional_info": { "type": "object" }
+      }
+    }
+  }
+  

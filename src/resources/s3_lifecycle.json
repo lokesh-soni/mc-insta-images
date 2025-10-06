@@ -1,0 +1,20 @@
+{
+  "Rules": [
+    {
+      "ID": "ArchiveImages",
+      "Filter": { "Prefix": "images/archived/" },
+      "Status": "Enabled",
+      "Transitions": [
+        { "Days": 0, "StorageClass": "STANDARD_IA" }
+      ]
+    },
+    {
+      "ID": "DeleteImages",
+      "Filter": { "Prefix": "images/deleted/" },
+      "Status": "Enabled",
+      "Transitions": [
+        { "Days": 0, "StorageClass": "DEEP_ARCHIVE" }
+      ]
+    }
+  ]
+}
