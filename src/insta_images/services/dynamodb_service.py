@@ -1,6 +1,6 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-from insta_images.utils.config import get_env
+from insta_images.utils.config import get_env_var
 from insta_images.utils.logger import logger
 
 
@@ -18,17 +18,16 @@ class DynamoDBService:
         self.table = self.dynamodb.Table(self.table_name)
         logger.debug("DynamoDBService connected to table %s", self.table_name)
 
-    def put_item(self, item):
-        """Item can be dict or dataclass with __dict__."""
-        payload = item if isinstance(item, dict) else item.__dict__
-        self.table.put_item(Item=payload)
-        logger.info("DynamoDB put_item: %s", payload.get("image_id"))
-
     def get_item(self, image_id: str):
         resp = self.table.get_item(Key={"image_id": image_id})
         item = resp.get("Item")
         logger.debug("DynamoDB get_item %s -> %s", image_id, bool(item))
         return item
+
+    def put_item(self, item):
+        payload = item if isinstance(item, dict) else item.__dict__
+        self.table.put_item(Item=payload)
+        logger.info("DynamoDB put_item: %s", payload.get("image_id"))
 
     def delete_item(self, image_id: str):
         self.table.delete_item(Key={"image_id": image_id})
@@ -39,9 +38,8 @@ class DynamoDBService:
         if user_id:
             try:
                 resp = self.table.query(
-                    IndexName="user_live_index",
+                    IndexName="user_created_index",
                     KeyConditionExpression=Key("user_id").eq(user_id),
-                    FilterExpression=Attr("is_live").eq(True)
                 )
                 items = resp.get("Items", [])
             except Exception as e:
@@ -56,4 +54,7 @@ class DynamoDBService:
         return items
 
     def query_by_user(self, user_id: str):
+        return self.list_items(user_id=user_id)
+
+    def query_by_filters(self, user_id: str):
         return self.list_items(user_id=user_id)

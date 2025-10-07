@@ -8,3 +8,7 @@ class ImageNotFound(ImageServiceError):
 
 class InvalidMetadata(ImageServiceError):
     pass
+
+
+class InvalidSearchFilter(Exception):
+    pass

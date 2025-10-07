@@ -1,31 +1,24 @@
 
 from insta_images.services.image_service import get_image
-from insta_images.utils.exceptions import ImageNotFound
+from insta_images.utils.exceptions import ImageNotFound, InvalidSearchFilter
+from insta_images.utils.helpers import response_builder
 
 
 def lambda_handler(event, context):
     
     try:
-        
         image_id = event.get("pathParameters", "{}").get("id")
         if not image_id:
-            return {"statusCode": 400, "body": "Missing Images Id in path"}
-        resp = get_image(image_id)
-        if resp:
-            return {
-                "statusCode": 200,
-                "headers": {"Content-Type": "application/json"},
-                "body": resp,
-            }
+            resp = get_image(image_id)
+            if resp:
+                return response_builder(200, response_body=resp)
+        else:
+            raise InvalidSearchFilter("Missing Images Id in path")
+        
+    except InvalidSearchFilter as err:
+        return response_builder(422, response_body=str(err))
     except ImageNotFound:
-        return {
-            "statusCode": 404,
-            "headers": {"Content-Type": "application/json"},
-            "body": "Image Not Found !!",
-        }
+        return response_builder(404, response_body="Image Not Found !!")
     except Exception as e:
-        return {
-            "statusCode": 400,
-            "headers": {"Content-Type": "application/json"},
-            "body": str(e),
-        }
+        return response_builder(400, response_body=str(e))
+    

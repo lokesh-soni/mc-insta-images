@@ -61,7 +61,7 @@ def lambda_handler(event, context):
             raise Exception("Failed to generate pre-signed URL")
     except Exception as e:
         return {
-            "statusCode": 500,
+            "statusCode": 400,
             "headers": {"Content-Type": "application/json"},
             "body": json.dumps({"error": str(e)}),
         }

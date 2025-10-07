@@ -1,8 +1,10 @@
 import logging
-import os
 
-LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
-logger = logging.getLogger("insta_images")
+from insta_images.utils.config import get_env
+
+
+LOG_LEVEL = get_env("LOG_LEVEL", "INFO").upper()
+logger = logging.getLogger(get_env("APP_NAME"))
 logger.setLevel(LOG_LEVEL)
 if not logger.handlers:
     ch = logging.StreamHandler()

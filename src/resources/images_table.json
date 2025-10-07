@@ -3,17 +3,17 @@
   "AttributeDefinitions": [
     {"AttributeName": "image_id", "AttributeType": "S"},
     {"AttributeName": "user_id", "AttributeType": "S"},
-    {"AttributeName": "uploaded_at", "AttributeType": "S"}
+    {"AttributeName": "created_at", "AttributeType": "S"}
   ],
   "KeySchema": [
     {"AttributeName": "image_id", "KeyType": "HASH"}
   ],
   "GlobalSecondaryIndexes": [
     {
-      "IndexName": "user_uploaded_index",
+      "IndexName": "user_created_index",
       "KeySchema": [
         {"AttributeName": "user_id", "KeyType": "HASH"},
-        {"AttributeName": "uploaded_at", "KeyType": "RANGE"}
+        {"AttributeName": "created_at", "KeyType": "RANGE"}
       ],
       "Projection": {"ProjectionType": "ALL"},
       "ProvisionedThroughput": {"ReadCapacityUnits": 5, "WriteCapacityUnits": 5}

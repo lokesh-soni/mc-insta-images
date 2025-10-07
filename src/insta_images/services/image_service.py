@@ -1,40 +1,53 @@
+import json
+import uuid
+
 from insta_images.services.s3_service import S3Service
 from insta_images.services.dynamodb_service import DynamoDBService
-from insta_images.services.models import Image
 from insta_images.utils.logger import logger
-from insta_images.utils.exceptions import ImageNotFound, InvalidMetadata
+from insta_images.utils.exceptions import ImageNotFound
 
 s3 = S3Service()
 db = DynamoDBService()
 
 
-def upload_image(file_bytes: bytes, metadata: dict):
-    # metadata should include image_id, user_id and optional 'filename' or 's3_key'
-    image_id = metadata.get("image_id")
-    user_id = metadata.get("user_id")
-    if not image_id or not user_id:
-        raise InvalidMetadata("image_id and user_id are required")
+def create_or_update_image(req_body: dict):
+    image_id = req_body.get("image_id") or str(uuid.uuid4())
+    user_id = req_body.get("user_id")
 
-    filename = metadata.get("filename", f"{image_id}.jpg")
-    # create full s3 key
-    s3_key = metadata.get("s3_key") or s3.build_active_key(filename)
+    is_live = req_body.get("is_live", True),
+    is_archived = req_body.get("is_archived", False),
+    is_deleted = req_body.get("is_deleted", False),
 
-    image = Image(
-        image_id=image_id,
-        user_id=user_id,
-        s3_key=s3_key,
-        tags=metadata.get("tags", []),
-        additional_info=metadata.get("additional_info", {}),
+    if is_archived:
+        s3_key = f"images/archived/{image_id}.jpg"
+    elif is_deleted:
+        s3_key = f"images/deleted/{image_id}.jpg"
+    else:
+        s3_key = f"images/active/{image_id}.jpg"
+    image = {
+        "image_id": image_id,
+        "user_id": user_id,
+        "s3_key": s3_key,
+        "tags": req_body.get("tags", []),
+        "additional_info": req_body.get("additional_info", {}),
+        "is_live": is_live,
+        "is_archived": is_archived,
+        "is_deleted": is_deleted,
+    }
+    db.put_item(image)
+    presigned_url = s3.get_signed_url(s3_key, "put_object")
+    return json.dumps(
+        {
+            "presigned_url": presigned_url,
+            "s3_key": s3_key,
+            "user_id": user_id,
+            "image_id": image_id,
+        }
     )
 
-    s3.upload_file(file_bytes, image.s3_key)
-    db.put_item(image)
-    logger.info("upload_image completed for %s", image_id)
-    return {"image_id": image_id, "s3_key": image.s3_key}
 
-
-def list_images(user_id: str = None, tag: str = None):
-    return db.list_items(user_id=user_id, tag=tag)
+def list_images(user_id: str = None):
+    return db.list_items(user_id=user_id)
 
 
 def get_image(image_id: str):
@@ -43,7 +56,7 @@ def get_image(image_id: str):
         raise ImageNotFound(image_id)
     
     if item.get("s3_key"):
-        signed_url = s3.get_download_signed_url(item.get("s3_key"))
+        signed_url = s3.get_signed_url(item.get("s3_key"))
         return {"metadata": item, "signed_url": signed_url}
         
 
@@ -62,5 +75,10 @@ def delete_image(image_id: str):
     logger.info("delete_image completed for %s", image_id)
 
 
-def search_images(**kwargs):
-    pass
+def search_images(filters):
+    gross_list = []
+    if filters.get("user_id"):
+        gross_list = db.query_by_user(user_id=filters.get("user_id"))
+    else:
+        
+        pass
