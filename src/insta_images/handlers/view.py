@@ -5,11 +5,12 @@ from insta_images.utils.helpers import response_builder
 
 
 def lambda_handler(event, context):
-    
     try:
         image_id = event.get("pathParameters", "{}").get("id")
-        if not image_id:
+        if image_id:
+            print(image_id)
             resp = get_image(image_id)
+            print(resp)
             if resp:
                 return response_builder(200, response_body=resp)
         else:

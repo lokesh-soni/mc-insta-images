@@ -19,7 +19,7 @@ DIST_DIR="dist"
 # ------------------------------
 # Handler list
 # ------------------------------
-HANDLERS=("upload" "view" "delete" "list" "archive")
+HANDLERS=("upload" "view" "delete" "search")
 
 # ------------------------------
 # Helpers

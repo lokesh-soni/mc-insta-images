@@ -1,7 +1,6 @@
 import json
 
 from insta_images.services.image_service import search_images
-from insta_images.utils.config import load_config
 from insta_images.utils.constants import SUPPORTED_FILTER_KEY
 from insta_images.utils.exceptions import InvalidSearchFilter
 from insta_images.utils.logger import logger

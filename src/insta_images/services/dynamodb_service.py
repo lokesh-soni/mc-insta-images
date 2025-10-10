@@ -1,6 +1,6 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-from insta_images.utils.config import get_env_var
+from insta_images.utils.config import get_env
 from insta_images.utils.logger import logger
 
 

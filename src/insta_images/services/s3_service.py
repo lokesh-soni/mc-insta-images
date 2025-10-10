@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from insta_images.utils.config import get_env_var
+from insta_images.utils.config import get_env
 from insta_images.utils.constants import (
     S3_PATH_ACTIVE,
     S3_PATH_ARCHIVED,
